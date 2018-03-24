@@ -9,18 +9,17 @@ import cucumber.api.testng.CucumberFeatureWrapper;
 import cucumber.api.testng.TestNGCucumberRunner;
 
 /**
- * This class is responsible for reading each .feature file and execute its corresponding Steps file
+ * This class is responsible for reading each .feature file and executing a separated its corresponding Steps file
  * 
  * @author Kleber Silva
- *
  */
 
 @CucumberOptions (features = "src/test/resources/features", glue = {"steps"},
-				  format = {
-						     "pretty",
-						     "html:target/cucumber-reports/testResult",
-						     "json:target/cucumber-reports/testResult.json",
-				 })
+		  format = {
+			     "pretty",
+			     "html:target/cucumber-reports/testResult",
+			     "json:target/cucumber-reports/testResult.json",
+		 })
 
 public class TestRunner extends AbstractTestNGCucumberTests {
 
