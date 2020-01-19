@@ -1,47 +1,41 @@
-import cucumber.api.CucumberOptions;
+import io.cucumber.testng.CucumberFeatureWrapper;
+import io.cucumber.testng.CucumberOptions;
+import io.cucumber.testng.CucumberOptions.SnippetType;
+import io.cucumber.testng.PickleEventWrapper;
+import io.cucumber.testng.TestNGCucumberRunner;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import cucumber.api.testng.AbstractTestNGCucumberTests;
-import cucumber.api.testng.CucumberFeatureWrapper;
-import cucumber.api.testng.TestNGCucumberRunner;
+@CucumberOptions (features = "src/test/resources/features",
+		glue = "steps",
+		snippets = SnippetType.CAMELCASE,
+		plugin = {
+			"pretty", "html:target/cucumber-reports/testResult.html", "json:target/cucumber-reports/testResult.json",
+		})
 
-/**
- * This class is responsible for reading each .feature file and executing a separated its corresponding Steps file
- * 
- * @author Kleber Silva
- */
+public class TestRunner {
 
-@CucumberOptions (features = "src/test/resources/features", glue = {"steps"},
-		  format = {
-			     "pretty",
-			     "html:target/cucumber-reports/testResult",
-			     "json:target/cucumber-reports/testResult.json",
-		 })
-
-public class TestRunner extends AbstractTestNGCucumberTests {
-
-	private TestNGCucumberRunner runner;
+	private TestNGCucumberRunner testNGCucumberRunner;
 
 	@BeforeClass(alwaysRun = true)
-	public void setUpClass() throws Exception {
-		runner = new TestNGCucumberRunner(this.getClass());
+	public void setUpClass() {
+		testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 	}
 
-	@Test(groups = "cucumber", description = "Run each cucumber feature", dataProvider = "features")
-	public void runFeature(CucumberFeatureWrapper cucumberFeature) {
-		runner.runCucumber(cucumberFeature.getCucumberFeature());
+	@Test(groups = "cucumber", description = "Run Cucumber Scenario", dataProvider = "scenarios")
+	public void scenario(PickleEventWrapper pickleEventWrapper, CucumberFeatureWrapper cucumberFeatureWrapper) throws Throwable {
+		testNGCucumberRunner.runScenario(pickleEventWrapper.getPickleEvent());
 	}
 
 	@DataProvider
-	public Object[][] features() {
-		return runner.provideFeatures();
+	public Object[][] scenarios() {
+		return testNGCucumberRunner.provideScenarios();
 	}
 
 	@AfterClass(alwaysRun = true)
-	public void tearDownClass() throws Exception {
-		runner.finish();
+	public void tearDownClass() {
+		testNGCucumberRunner.finish();
 	}
 }
