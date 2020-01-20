@@ -1,3 +1,4 @@
+import core.DriverHelper;
 import io.cucumber.testng.CucumberFeatureWrapper;
 import io.cucumber.testng.CucumberOptions;
 import io.cucumber.testng.CucumberOptions.SnippetType;
@@ -9,7 +10,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 @CucumberOptions (features = "src/test/resources/features",
-		glue = "steps",
+		glue = {"steps", "core"},
 		snippets = SnippetType.CAMELCASE,
 		plugin = {
 			"pretty", "html:target/cucumber-reports/testResult.html", "json:target/cucumber-reports/testResult.json",
@@ -17,10 +18,13 @@ import org.testng.annotations.Test;
 
 public class TestRunner {
 
+	private DriverHelper driverHelper;
 	private TestNGCucumberRunner testNGCucumberRunner;
 
 	@BeforeClass(alwaysRun = true)
 	public void setUpClass() {
+		driverHelper = new DriverHelper();
+		driverHelper.start();
 		testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 	}
 
@@ -36,6 +40,7 @@ public class TestRunner {
 
 	@AfterClass(alwaysRun = true)
 	public void tearDownClass() {
+		driverHelper.stop();
 		testNGCucumberRunner.finish();
 	}
 }
