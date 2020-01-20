@@ -3,13 +3,13 @@ package pageObjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import util.StringUtils;
 
 import java.util.concurrent.TimeUnit;
 
 public class RegisterNewUserPage extends BasePage {
 
     private WebDriver driver;
-    private String baseUrl = "http://demoqa.com/";
 
     public RegisterNewUserPage(WebDriver driver) {
         super(driver);
@@ -18,13 +18,15 @@ public class RegisterNewUserPage extends BasePage {
 
     public void openPage() {
         driver.manage().window().maximize();
-        driver.get(baseUrl + "/registration/");
+        driver.get("http://demoqa.com/registration/");
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
     public void fillIn(String fieldName, String text) {
-        WebElement element;
         By by;
+        WebElement element;
+        boolean isEmail = false;
+        boolean isPhoneNumber = false;
         switch(fieldName) {
             case "firstName":
                 by = By.id("name_3_firstname");
@@ -32,8 +34,13 @@ public class RegisterNewUserPage extends BasePage {
             case "lastName":
                 by = By.id("name_3_lastname");
                 break;
+            case "email":
+                by = By.id("email_1");
+                isEmail = true;
+                break;
             case "phoneNumber":
                 by = By.id("phone_9");
+                isPhoneNumber = true;
                 break;
             case "username":
                 by = By.id("username");
@@ -43,9 +50,6 @@ public class RegisterNewUserPage extends BasePage {
                 break;
             case "confirmPassword":
                 by = By.id("confirm_password_password_2");
-                break;
-            case "email":
-                by = By.id("email_1");
                 break;
             case "profilePicture":
                 by = By.id("profile_pic_10");
@@ -57,8 +61,28 @@ public class RegisterNewUserPage extends BasePage {
                 throw new IllegalArgumentException("Invalid fieldName");
 
         }
-        element = driver.findElement(by);
-        enterText(element, text);
+
+        if (isEmail || isPhoneNumber) {
+            if (isEmail) {
+                if (StringUtils.isValidEmail(text)) {
+                    element = driver.findElement(by);
+                    enterText(element, text);
+                } else {
+                    throw new IllegalArgumentException("Please provide a valid e-mail address");
+                }
+            }
+            if (isPhoneNumber) {
+                if (StringUtils.isValidPhoneNumber(text)) {
+                    element = driver.findElement(by);
+                    enterText(element, text);
+                } else {
+                    throw new IllegalArgumentException("Please provide a valid phone number");
+                }
+            }
+        } else {
+            element = driver.findElement(by);
+            enterText(element, text);
+        }
     }
 
     public void selectMaritalStatus(String maritalStatus) {
