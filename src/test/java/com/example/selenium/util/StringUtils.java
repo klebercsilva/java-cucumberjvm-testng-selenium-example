@@ -1,4 +1,4 @@
-package util;
+package com.example.selenium.util;
 
 public class StringUtils {
 	

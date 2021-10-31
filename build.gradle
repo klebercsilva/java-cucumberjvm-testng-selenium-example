@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenLocal()
+    maven {
+        url = uri('https://repo.maven.apache.org/maven2/')
+    }
+}
+
+ext {
+    log4j = '2.13.2'
+    testng = '7.4.0'
+    selenium = '3.141.59'
+    cucumber = '6.11.0'
+    spring = '2.3.2.RELEASE'
+    allure = '2.14.0'
+    lombok = '1.18.22'
+}
+
+dependencies {
+    testImplementation "org.testng:testng:$testng"
+    implementation "org.projectlombok:lombok:$lombok"
+    implementation "io.cucumber:cucumber-java:$cucumber"
+    implementation "io.cucumber:cucumber-testng:$cucumber"
+    implementation "io.cucumber:cucumber-spring:$cucumber"
+    testImplementation "org.springframework.boot:spring-boot-starter-web:$spring"
+    implementation "io.qameta.allure:allure-cucumber6-jvm:$allure"
+    testImplementation "org.seleniumhq.selenium:selenium-java:$selenium"
+    testImplementation "org.springframework.boot:spring-boot-starter-test:$spring"
+    implementation "io.cucumber:cucumber-com.example.selenium.core.com.example.selenium.core:$cucumber"
+    testImplementation "org.apache.logging.log4j:log4j-com.example.selenium.core.com.example.selenium.core:$log4j"
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+description = 'This is a basic test automation framework created with the purpose of demonstrating the integration of Java, Cucumber, Selenium, Spring for Web automation.'
+java.sourceCompatibility = JavaVersion.VERSION_1_8
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+test {
+    useTestNG() {
+        suites("testng.xml")
+    }
+    reports.html.enabled(false)
+    scanForTestClasses = false
+    systemProperties(System.properties)
+    testLogging.showStandardStreams = true
+}

@@ -1,4 +1,4 @@
-package core;
+package com.example.selenium.core;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

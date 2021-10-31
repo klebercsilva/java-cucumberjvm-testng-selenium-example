@@ -11,6 +11,11 @@ Git:
     git clone https://github.com/klebercsilva/java-cucumberjvm-testng-selenium-example
     cd java-cucumberjvm-testng-selenium-example
 
+### If you are running this on a Mac make sure chromedriver is installed:
+
+    brew install chromedriver
+    brew upgrade chromedriver
+
 ### Run with Maven
 
 Open a command window and run:

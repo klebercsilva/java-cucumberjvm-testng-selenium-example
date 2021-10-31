@@ -1,24 +1,36 @@
-package pageObjects;
+package com.example.selenium.pageObjects;
 
+import com.example.selenium.core.SpringPropertiesConfiguration;
+import com.example.selenium.util.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import util.StringUtils;
+import org.openqa.selenium.support.PageFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
+@Component
+@Scope("cucumber-glue")
 public class RegisterNewUserPage extends BasePage {
 
+    @Autowired
     private WebDriver driver;
+
+    @Autowired
+    private SpringPropertiesConfiguration properties;
 
     public RegisterNewUserPage(WebDriver driver) {
         super(driver);
         this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
 
     public void openPage() {
         driver.manage().window().maximize();
-        driver.get("http://demoqa.com/registration/");
+        driver.get(properties.getHost()+"/registration/");
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
     }
 
@@ -66,7 +78,7 @@ public class RegisterNewUserPage extends BasePage {
             if (isEmail) {
                 if (StringUtils.isValidEmail(text)) {
                     element = driver.findElement(by);
-                    enterText(element, text);
+                    action.enterText(element, text);
                 } else {
                     throw new IllegalArgumentException("Please provide a valid e-mail address");
                 }
@@ -74,15 +86,19 @@ public class RegisterNewUserPage extends BasePage {
             if (isPhoneNumber) {
                 if (StringUtils.isValidPhoneNumber(text)) {
                     element = driver.findElement(by);
-                    enterText(element, text);
+                    action.enterText(element, text);
                 } else {
                     throw new IllegalArgumentException("Please provide a valid phone number");
                 }
             }
         } else {
             element = driver.findElement(by);
-            enterText(element, text);
+            action.enterText(element, text);
         }
+    }
+
+    public void chooseValue(By by, String text) {
+        // TODO implementation
     }
 
     public void selectMaritalStatus(String maritalStatus) {
@@ -102,7 +118,7 @@ public class RegisterNewUserPage extends BasePage {
                 throw new IllegalArgumentException("Invalid fieldName");
         }
         element = driver.findElement(by);
-        click(element);
+        action.click(element);
     }
 
     public void selectHobby(String hobbyName) {
@@ -122,20 +138,20 @@ public class RegisterNewUserPage extends BasePage {
                 throw new IllegalArgumentException("Invalid fieldName");
         }
         element = driver.findElement(by);
-        click(element);
+        action.click(element);
     }
 
     public void selectBirthdayInCalendar(String birthday) {
-        chooseValue(By.id("mm_date_8"), "01");
-        chooseValue(By.id("dd_date_8"), "01");
-        chooseValue(By.id("yy_date_8"), "1992");
+        action.chooseValue(By.id("mm_date_8"), "01");
+        action.chooseValue(By.id("dd_date_8"), "01");
+        action.chooseValue(By.id("yy_date_8"), "1992");
     }
 
     public void clickSubmitButton() {
-        click(driver.findElement(By.name("pie_submit")));
+        action.click(driver.findElement(By.name("pie_submit")));
     }
 
     public void assertRegistrationCompleted() {
-        assertDisplayed(driver.findElement(By.className("piereg_login_error")));
+        action.assertDisplayed(driver.findElement(By.className("piereg_login_error")));
     }
 }

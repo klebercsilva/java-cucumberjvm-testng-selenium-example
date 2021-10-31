@@ -1,21 +1,25 @@
-package core;
+package com.example.selenium.core;
 
+import lombok.NoArgsConstructor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import static org.testng.Assert.assertTrue;
 
-public class GenericAction implements IGenericAction {
+@NoArgsConstructor
+@Component
+@Scope("cucumber-glue")
+public class MobileAction implements IGenericAction {
 
+    @Autowired
     private WebDriver driver;
-
-    public GenericAction(WebDriver driver) {
-        this.driver = driver;
-    }
 
     @Override
     public void click(WebElement element) {
